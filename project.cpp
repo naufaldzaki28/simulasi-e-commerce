@@ -102,13 +102,17 @@ void lupaPassword() {
 // Menu admin
 void menuAdmin() {
     cout << "\n=== Menu Admin ===\n";
-    cout << "[... fitur admin di sini ...]\n";
+    cout << "1. Tambahkan barang\n";
+    cout << "2. \n";
 }
 
 // Menu customer
-void menuCustomer() {
+void menuCustomer(const string& username, const string& role) {
     cout << "\n=== Menu Customer ===\n";
-    cout << "[... fitur customer di sini ...]\n";
+    cout << "1. Cari Barang\n";
+    cout << "2. Masukkan keranjang\n";
+    cout << "3. Checkout barang\n";
+    cout << "4. Lihat perjalanan barang\n";
 }
 
 void menuPengaturanAkun(const string& username, const string& role) {
@@ -153,7 +157,7 @@ void menuCustomerUtama(const string& username, const string& role) {
 
         switch (pilih) {
             case '1':
-                cout << "[Fitur belanja belum diimplementasikan]\n";
+                menuCustomer(username, role);
                 break;
             case '2':
                 menuPengaturanAkun(username, role);
@@ -166,7 +170,7 @@ void menuCustomerUtama(const string& username, const string& role) {
     } while (true);
 }
 // menu utama admin
-void menuAdminUtama(const string& username, const string& role) {
+void menuUtama(const string& username, const string& role) {
     int pilihan;
     do {
         cout << "\n=== Menu Utama (" << role << ") ===\n";
@@ -222,7 +226,7 @@ int main(){
                 cout << "Login berhasil.\n";
                 cout << "Selamat datang, " << username << "(" << role << ")!" << '\n';
                 simpanHistoriLogin(username);
-                menuAdminUtama(username, akun[username].second);
+                menuUtama(username, akun[username].second);
             } else {
                 percobaan--;
                 if (percobaan > 0) {

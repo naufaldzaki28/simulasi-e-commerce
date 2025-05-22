@@ -2,9 +2,62 @@
 #include <string>
 #include <fstream>
 #include <map>
+#include <vector>
 using namespace std;
 //akun: username-> password, role
 map<string, pair<string, string>>akun; 
+// struct produk admin
+struct Produk {
+    string id;
+    string nama;
+    double harga;
+    int stok;
+};
+vector<Produk> daftarProduk;
+// load produk admin ke file
+void loadProduk() {
+    ifstream file("produk.txt");
+    string id, nama;
+    double harga;
+    int stok;
+    daftarProduk.clear();
+    while (file >> id >> nama >> harga >> stok) {
+        daftarProduk.push_back({id, nama, harga, stok});
+    }
+    file.close();
+}
+// simpan ke dalam file
+void simpanSemuaProduk() {
+    ofstream file("produk.txt");
+    for (const auto& p : daftarProduk) {
+        file << p.id << " " << p.nama << " " << p.harga << " " << p.stok << '\n';
+    }
+    file.close();
+}
+// menambahkan produk
+void tambahProduk() {
+    Produk p;
+    cout << "\n== Tambah Produk Baru ==\n";
+    cout << "ID Produk: "; cin >> p.id;
+    cout << "Nama Produk: "; cin >> p.nama;
+    cout << "Harga: "; cin >> p.harga;
+    cout << "Stok: "; cin >> p.stok;
+    daftarProduk.push_back(p);
+    simpanSemuaProduk();
+    cout << "Produk berhasil ditambahkan.\n";
+}
+// menampilkan produk
+void tampilkanProduk() {
+    cout << "\n== Daftar Produk ==\n";
+    if (daftarProduk.empty()) {
+        cout << "Belum ada produk.\n";
+        return;
+    }
+    cout << "ID\tNama\tHarga\tStok\n";
+    for (const auto& p : daftarProduk) {
+        cout << p.id << "\t" << p.nama << "\t" << p.harga << "\t" << p.stok << '\n';
+    }
+}
 // Load akun from file
 void loadAkun(){ 
     ifstream file("akun.txt");
@@ -101,9 +154,34 @@ void lupaPassword() {
 
 // Menu admin
 void menuAdmin() {
-    cout << "\n=== Menu Admin ===\n";
-    cout << "1. Tambahkan barang\n";
-    cout << "2. \n";
+    int pilihan;
+    loadProduk(); // muat data produk setiap kali masuk menu
+    do {
+        cout << "\n=== Menu Admin ===\n";
+        cout << "1. Tambah Produk\n";
+        cout << "2. Lihat Produk\n";
+        cout << "3. Kembali\n";
+        cout << "Pilih: ";
+        cin >> pilihan;
+        if (cin.fail()) {
+            cin.clear(); cin.ignore(1000, '\n');
+            cout << "Input tidak valid.\n";
+            continue;
+        }
+        switch (pilihan) {
+            case 1:
+                tambahProduk();
+                break;
+            case 2:
+                tampilkanProduk();
+                break;
+            case 3:
+                return;
+            default:
+                cout << "Pilihan tidak valid.\n";
+                break;
+        }
+    } while (true);
 }
 
 // Menu customer
@@ -116,7 +194,7 @@ void menuCustomer(const string& username, const string& role) {
 }
 
 void menuPengaturanAkun(const string& username, const string& role) {
-    char pilihan;
+    int pilihan;
     do {
         cout << "\n=== Pengaturan Akun ===\n";
         cout << "1. Lihat Profil\n";
@@ -125,18 +203,24 @@ void menuPengaturanAkun(const string& username, const string& role) {
         cout << "4. Kembali\n";
         cout << "Pilih: ";
         cin >> pilihan;
-
+         // jika input huruf tidak error/looping tak henti
+        if (cin.fail()) {
+        cin.clear(); // menghapus flag error
+        cin.ignore(1000, '\n'); // buang karakter sisa di input buffer
+        cout << "Input tidak valid. Masukkan angka 1-4.\n";
+        continue; // balik ke atas loop
+        }
          switch (pilihan) {
-            case '1': 
+            case 1: 
             tampilkanProfil(username);
             break;
-            case '2': 
+            case 2: 
             gantiPassword(username); 
             break;
-            case '3': 
+            case 3: 
             tampilkanHistoriLogin(username); 
             break;
-            case '4': 
+            case 4: 
             return;
             default: 
             cout << "Pilihan tidak valid.\n"; 
@@ -154,7 +238,13 @@ void menuCustomerUtama(const string& username, const string& role) {
         cout << "3. Kembali\n";
         cout << "Pilih: ";
         cin >> pilih;
-
+        // jika input huruf tidak error/looping tak henti
+        if (cin.fail()) {
+        cin.clear(); // menghapus flag error
+        cin.ignore(1000, '\n'); // buang karakter sisa di input buffer
+        cout << "Input tidak valid. Masukkan angka 1-4.\n";
+        continue; // balik ke atas loop
+        }
         switch (pilih) {
             case '1':
                 menuCustomer(username, role);
@@ -177,7 +267,14 @@ void menuUtama(const string& username, const string& role) {
         cout << "1. Pengaturan Akun\n";
         cout << "2. Fitur " << (role == "admin" ? "Admin" : "Customer") << "\n";
         cout << "3. Logout\n";
-        cout << "Pilih: "; cin >> pilihan;
+        cout << "Pilih: "; cin >> pilihan; 
+        // jika input huruf tidak error/looping tak henti
+        if (cin.fail()) {
+        cin.clear(); // menghapus flag error
+        cin.ignore(1000, '\n'); // buang karakter sisa di input buffer
+        cout << "Input tidak valid. Masukkan angka 1-4.\n";
+        continue; // balik ke atas loop
+        }
         switch (pilihan){
         case 1:
             menuPengaturanAkun(username, role);
@@ -210,6 +307,13 @@ int main(){
     cout << "3. Lupa password/reset password\n";
     cout << "4. keluar?\n";
     cout << "Silakan pilih menu(1-4): "; cin >> pilih;
+    // jika input huruf tidak error/looping tak henti
+    if (cin.fail()) {
+    cin.clear(); // menghapus flag error
+    cin.ignore(1000, '\n'); // buang karakter sisa di input buffer
+    cout << "Input tidak valid. Masukkan angka 1-4.\n";
+    continue; // balik ke atas loop
+    }
     switch (pilih){
         case 1:
             if (percobaan <= 0) {

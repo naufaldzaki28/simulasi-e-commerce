@@ -6,58 +6,6 @@
 using namespace std;
 //akun: username-> password, role
 map<string, pair<string, string>>akun; 
-// struct produk admin
-struct Produk {
-    string id;
-    string nama;
-    double harga;
-    int stok;
-};
-vector<Produk> daftarProduk;
-// load produk admin ke file
-void loadProduk() {
-    ifstream file("produk.txt");
-    string id, nama;
-    double harga;
-    int stok;
-    daftarProduk.clear();
-    while (file >> id >> nama >> harga >> stok) {
-        daftarProduk.push_back({id, nama, harga, stok});
-    }
-    file.close();
-}
-// simpan ke dalam file
-void simpanSemuaProduk() {
-    ofstream file("produk.txt");
-    for (const auto& p : daftarProduk) {
-        file << p.id << " " << p.nama << " " << p.harga << " " << p.stok << '\n';
-    }
-    file.close();
-}
-// menambahkan produk
-void tambahProduk() {
-    Produk p;
-    cout << "\n== Tambah Produk Baru ==\n";
-    cout << "ID Produk: "; cin >> p.id;
-    cout << "Nama Produk: "; cin >> p.nama;
-    cout << "Harga: "; cin >> p.harga;
-    cout << "Stok: "; cin >> p.stok;
-    daftarProduk.push_back(p);
-    simpanSemuaProduk();
-    cout << "Produk berhasil ditambahkan.\n";
-}
-// menampilkan produk
-void tampilkanProduk() {
-    cout << "\n== Daftar Produk ==\n";
-    if (daftarProduk.empty()) {
-        cout << "Belum ada produk.\n";
-        return;
-    }
-    cout << "ID\tNama\tHarga\tStok\n";
-    for (const auto& p : daftarProduk) {
-        cout << p.id << "\t" << p.nama << "\t" << p.harga << "\t" << p.stok << '\n';
-    }
-}
 // Load akun from file
 void loadAkun(){ 
     ifstream file("akun.txt");
@@ -127,9 +75,7 @@ void gantiPassword(const string& username) {
 //reset password
 void lupaPassword() {
     string username;
-    cout << "Masukkan username/email anda: ";
-    cin >> username;
-    
+    cout << "Masukkan username/email anda: "; cin >> username;
     if (akun.find(username) == akun.end()) {
         cout << "Username tidak ditemukan.\n";
         return;
@@ -151,7 +97,141 @@ void lupaPassword() {
     file.close();
     cout << "Password berhasil direset.\n";
 }
+// struct produk admin
+struct Produk {
+    string id, nama;
+    double harga;
+    int stok;
+};
+vector<Produk> daftarProduk;
+// load produk admin ke file
+void loadProduk() {
+    ifstream file("produk.txt");
+    string id, nama;
+    double harga;
+    int stok;
+    daftarProduk.clear();
+    while (file >> id >> nama >> harga >> stok) {
+        daftarProduk.push_back({id, nama, harga, stok});
+    }
+    file.close();
+}
+// simpan ke dalam file
+void simpanSemuaProduk() {
+    ofstream file("produk.txt");
+    for (const auto& p : daftarProduk) {
+        file << p.id << " " << p.nama << " " << p.harga << " " << p.stok << '\n';
+    }
+    file.close();
+}
+// menambahkan produk
+void tambahProduk() {
+    Produk p;
+    cout << "\n== Tambah Produk Baru ==\n";
+    cout << "ID Produk: "; cin >> p.id;
+    cout << "Nama Produk: "; cin >> p.nama;
+    cout << "Harga: "; cin >> p.harga;
+    cout << "Stok: "; cin >> p.stok;
+    daftarProduk.push_back(p);
+    simpanSemuaProduk();
+    cout << "Produk berhasil ditambahkan.\n";
+}
+// menampilkan produk
+void tampilkanProduk() {
+    cout << "\n== Daftar Produk ==\n";
+    if (daftarProduk.empty()) {
+        cout << "Belum ada produk.\n";
+        return;
+    }
+    cout << "ID\tNama\tHarga\tStok\n";
+    for (const auto& p : daftarProduk) {
+        cout << p.id << "\t" << p.nama << "\t" << p.harga << "\t" << p.stok << '\n';
+    }
+}
+// edit produk
+void editProduk() {
+    string id;
+    cout << "\n== Edit Produk ==\n";
+    cout << "Masukkan ID produk yang ingin diubah: "; cin >> id;
+    bool ditemukan = false;
+    for (auto& p : daftarProduk) {
+        if (p.id == id) {
+            ditemukan = true;
+            cout << "Nama saat ini: " << p.nama << ", Harga: " << p.harga << ", Stok: " << p.stok << "\n";
+            cout << "Masukkan nama baru: "; cin >> p.nama;
+            cout << "Masukkan harga baru: "; cin >> p.harga;
+            cout << "Masukkan stok baru: "; cin >> p.stok;
+            simpanSemuaProduk();
+            cout << "Produk berhasil diperbarui.\n";
+            break;
+        }
+    }
 
+    if (!ditemukan) {
+        cout << "Produk dengan ID " << id << " tidak ditemukan.\n";
+    }
+}
+// hapus produk
+void hapusProduk() {
+    string id;
+    cout << "\n== Hapus Produk ==\n";
+    cout << "Masukkan ID produk yang ingin dihapus: "; cin >> id;
+    bool ditemukan = false;
+    for (auto it = daftarProduk.begin(); it != daftarProduk.end(); ++it) {
+        if (it->id == id) {
+            daftarProduk.erase(it);
+            simpanSemuaProduk();
+            cout << "Produk berhasil dihapus.\n";
+            ditemukan = true;
+            break;
+        }
+    }
+    if (!ditemukan) {
+        cout << "Produk dengan ID " << id << " tidak ditemukan.\n";
+    }
+}
+// cari produk
+void cariProduk() {
+    string keyword;
+    cout << "\n== Cari Produk ==\n";
+    cout << "Masukkan nama atau ID produk: "; cin >> keyword;
+    bool ditemukan = false;
+    cout << "Hasil pencarian:\n";
+    cout << "ID\tNama\tHarga\tStok\n";
+    for (const auto& p : daftarProduk) {
+        if (p.id.find(keyword) != string::npos || p.nama.find(keyword) != string::npos) {
+            cout << p.id << "\t" << p.nama << "\t" << p.harga << "\t" << p.stok << '\n';
+            ditemukan = true;
+        }
+    }
+    if (!ditemukan) {
+        cout << "Produk tidak ditemukan.\n";
+    }
+}
+// laporan penjualan
+void laporanPenjualan() {
+    ifstream file("transaksi.txt");
+    if (!file) {
+        cout << "Belum ada data transaksi.\n";
+        return;
+    }
+
+    map<string, pair<int, double>> laporan; // id -> (jumlah, total)
+
+    string id;
+    int jumlah;
+    double total;
+    while (file >> id >> jumlah >> total) {
+        laporan[id].first += jumlah;
+        laporan[id].second += total;
+    }
+    file.close();
+    cout << "\n== Laporan Penjualan ==\n";
+    cout << "ID\tJumlah Terjual\tTotal Pendapatan\n";
+    for (const auto& l : laporan) {
+        cout << l.first << "\t" << l.second.first << "\t\t" << l.second.second << '\n';
+    }
+}
 // Menu admin
 void menuAdmin() {
     int pilihan;
@@ -160,7 +240,11 @@ void menuAdmin() {
         cout << "\n=== Menu Admin ===\n";
         cout << "1. Tambah Produk\n";
         cout << "2. Lihat Produk\n";
-        cout << "3. Kembali\n";
+        cout << "3. Edit Produk\n";
+        cout << "4. Hapus Produk\n";
+        cout << "5. Cari Produk\n";
+        cout << "6. Laporan Penjualan\n";
+        cout << "7. Kembali\n";
         cout << "Pilih: ";
         cin >> pilihan;
         if (cin.fail()) {
@@ -176,6 +260,18 @@ void menuAdmin() {
                 tampilkanProduk();
                 break;
             case 3:
+                editProduk();
+                break;
+            case 4:
+                hapusProduk();
+                break;
+            case 5:
+                cariProduk();
+                break;
+            case 6:
+                laporanPenjualan();
+                break;
+            case 7:
                 return;
             default:
                 cout << "Pilihan tidak valid.\n";
@@ -183,7 +279,6 @@ void menuAdmin() {
         }
     } while (true);
 }
-
 // Menu customer
 void menuCustomer(const string& username, const string& role) {
     cout << "\n=== Menu Customer ===\n";
@@ -201,8 +296,7 @@ void menuPengaturanAkun(const string& username, const string& role) {
         cout << "2. Ganti Password\n";
         cout << "3. Lihat Histori Login\n";
         cout << "4. Kembali\n";
-        cout << "Pilih: ";
-        cin >> pilihan;
+        cout << "Pilih: "; cin >> pilihan;
          // jika input huruf tidak error/looping tak henti
         if (cin.fail()) {
         cin.clear(); // menghapus flag error
@@ -320,11 +414,9 @@ int main(){
                 cout << "Kesempatan login habis. Silakan coba lagi nanti.\n";
                 continue;
             }
-            
             cout << "==Login==" << '\n';
             cout << "Masukkan username/email anda: "; cin >> username;
             cout << "Masukkan password: "; cin >> password;
-            
             if  (akun.find(username) != akun.end() && akun[username].first == password){
                 string role = akun[username].second;
                 cout << "Login berhasil.\n";
@@ -341,7 +433,6 @@ int main(){
                 }
             }
         break; 
-        
         case 2:
             cout << "== Daftar Akun Baru ==\n";
             cout << "Masukkan username: "; cin >> username;

@@ -281,13 +281,33 @@ void menuAdmin() {
 }
 // Menu customer
 void menuCustomer(const string& username, const string& role) {
-    cout << "\n=== Menu Customer ===\n";
-    cout << "1. Cari Barang\n";
-    cout << "2. Masukkan keranjang\n";
-    cout << "3. Checkout barang\n";
-    cout << "4. Lihat perjalanan barang\n";
-}
+    int pilihan;
+    do {
+        cout << "\n=== Menu Customer ===\n";
+        cout << "1. Lihat Produk\n";
+        cout << "2. Kembali\n";
+        cout << "Pilih: ";
+        cin >> pilihan;
 
+        if (cin.fail()) {
+            cin.clear(); cin.ignore(1000, '\n');
+            cout << "Input tidak valid.\n";
+            continue;
+        }
+
+        switch (pilihan) {
+            case 1:
+                loadProduk(); // pastikan data produk terbaru
+                tampilkanProduk();
+                break;
+            case 2:
+                return;
+            default:
+                cout << "Pilihan tidak valid.\n";
+                break;
+        }
+    } while (true);
+}
 void menuPengaturanAkun(const string& username, const string& role) {
     int pilihan;
     do {
@@ -458,6 +478,6 @@ int main(){
             cout << "tidak valid.\n";
         }
     } while (true);
-    
+
     return 0;
 }

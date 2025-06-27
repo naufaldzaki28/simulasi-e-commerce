@@ -1,8 +1,0 @@
-=== Transaksi ===
-Username: adit ===
-Alamat: jl. salmon
-Metode Pembayaran: Transfer Bank
-Waktu: Tue Jun 17 22:14:18 2025
-Produk: mie | ID: 1 | Jumlah: 10 | Harga: 3500 | Subtotal: 35000
-Total Pembayaran: Rp35000
------------------------------

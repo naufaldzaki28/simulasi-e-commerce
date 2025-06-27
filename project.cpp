@@ -29,8 +29,8 @@ void simpanAkun(const string& username, const string& password, const string& ro
     getline(cin, nama);
     cout << "Masukkan alamat: ";
     getline(cin, alamat);
-    usersFile << username << " " << password << " " << role << " \""
-              << nama << "\" \"" << alamat << "\n";
+    usersFile << username << " " << password << " " << role << " \"" 
+                << nama << "\" " << "\"" << alamat << "\"\n";
     usersFile.close();
 }
 // menggantikan isi file lama sepenuhnya
@@ -53,51 +53,67 @@ void tampilkanProfil(const string& username) {
     cout << "\n=== Profil Pengguna ===\n";
     cout << "Username: " << username << "\n";
     cout << "Role: " << akun[username].second << "\n";
+    cout << "============================\n";
 }
 // menampilkan histori login
 void tampilkanHistoriLogin(const string& username) {
     ifstream file("histori_login.txt");
     string line;
-    cout << "\n=== Histori Login " << username << " ===\n";
+    cout << "\n===== Histori Login " << username << " =====\n";
     while (getline(file, line)) {
         if (line.find(username) == 0) {
             cout << line << '\n';
         }
     }
+    cout << "============================\n";
     file.close();
 }
 // ganti password
 void gantiPassword(const string& username) {
     string lama, baruPass, konfirm;
+    cout << "\n===== Ganti Password =====\n";
     cout << "Masukkan password lama: "; cin >> lama;
     if (lama != akun[username].first) {
         cout << "Password lama salah!\n";
+        cout << "Silakan coba lagi.\n";
+        cout << "============================\n";
         return;
     }
     cout << "Masukkan password baru: "; cin >> baruPass;
     cout << "Konfirmasi password baru: "; cin >> konfirm;
     if (baruPass != konfirm) {
         cout << "Konfirmasi tidak cocok!\n";
+        cout << "Gagal mengganti password.\n";
+        cout << "Silahkan untuk coba lagi.\n";
+        cout << "============================\n";
         return;
     }
     akun[username].first = baruPass;
     simpanSemuaAkun();
     cout << "Password berhasil diganti.\n";
+    cout << "Silahkan untuk coba login kembali dengan password baru Anda.\n";
+    cout << "============================\n";
 }
 //reset password
 void lupaPassword() {
     string username;
+    cout << "\n=== Reset Password ===\n";
     cout << "Masukkan username/email anda: "; cin >> username;
     if (akun.find(username) == akun.end()) {
         cout << "Username tidak ditemukan.\n";
+        cout << "Silahkan daftar akun baru jika belum memiliki akun.\n";
+        cout << "============================\n";
         return;
     }
     // tanya password baru
     string passwordBaru, konfirmasi;
     cout << "Masukkan password baru: "; cin >> passwordBaru;
     cout << "Konfirmasi password baru: "; cin >> konfirmasi;
+    cout << "============================\n";
     if (passwordBaru != konfirmasi) {
         cout << "Password tidak cocok. Gagal reset password.\n";
+        cout << "Silakan coba lagi.\n";
+        cout << "============================\n";
         return;
     }
     akun[username].first = passwordBaru;
@@ -108,6 +124,8 @@ void lupaPassword() {
     }
     file.close();
     cout << "Password berhasil direset.\n";
+    cout << "Silahkan login dengan password baru Anda.\n";
+    cout << "============================\n";
 }
 // ubah profil admin
 void ubahProfilAdmin(const string& username) {
@@ -124,12 +142,13 @@ void ubahProfilAdmin(const string& username) {
         if (uname == username && role == "admin") {
             ditemukan = true;
 
-            cout << "\n=== Ubah Profil Admin ===\n";
+            cout << "\n===== Ubah Profil Admin =====\n";
             cout << "Nama lama: " << nama << "\n";
             cout << "Masukkan nama baru (spasi diperbolehkan): ";
             cin.ignore();
             getline(cin, nama);
             cout << "\nProfil admin berhasil diperbarui!\n";
+            cout << "============================\n";
         }
         outFile << uname << " " << password << " " << role << " \""
                 << nama << "\" \"" << alamat << "\"\n";
@@ -142,6 +161,8 @@ void ubahProfilAdmin(const string& username) {
 
     if (!ditemukan) {
         cout << "Akun admin tidak ditemukan.\n";
+        cout << "Silahkan untuk coba lagi.\n";
+        cout << "============================\n";
     }
 }
 // ubah profil customer
@@ -159,7 +180,7 @@ void ubahProfilCustomer(const string& username) {
         getline(inFile, alamat, '"');
         if (uname == username) {
             ditemukan = true;
-            cout << "\n=== Ubah Profil ===\n";
+            cout << "\n===== Ubah Profil =====\n";
             cout << "Nama lama: " << nama << "\n";
             cout << "Masukkan nama baru (spasi diperbolehkan): ";
             cin.ignore();
@@ -168,6 +189,7 @@ void ubahProfilCustomer(const string& username) {
             cout << "Masukkan alamat baru (spasi diperbolehkan): ";
             getline(cin, alamat);
             cout << "\nProfil berhasil diperbarui!\n";
+            cout << "============================\n";
         }
         outFile << uname << " " << password << " " << role << " \""
                 << nama << "\" \"" << alamat << "\"\n";
@@ -178,6 +200,7 @@ void ubahProfilCustomer(const string& username) {
     rename("temp.txt", "users.txt");
     if (!ditemukan) {
         cout << "User tidak ditemukan.\n";
+        cout << "============================\n";
     }
 }
 
@@ -211,7 +234,7 @@ void simpanSemuaProduk() {
 // menambahkan produk
 void tambahProduk() {
     Produk p;
-    cout << "\n== Tambah Produk Baru ==\n";
+    cout << "\n====== Tambah Produk Baru =====\n";
     cout << "ID Produk: "; cin >> p.id;
     cout << "Nama Produk: "; cin >> p.nama;
     cout << "Harga: "; cin >> p.harga;
@@ -219,23 +242,30 @@ void tambahProduk() {
     daftarProduk.push_back(p);
     simpanSemuaProduk();
     cout << "Produk berhasil ditambahkan.\n";
+    cout << "============================\n";
 }
 // menampilkan produk
 void tampilkanProduk() {
-    cout << "\n== Daftar Produk ==\n";
+    cout << "\n===== Daftar Produk =====\n";
     if (daftarProduk.empty()) {
         cout << "Belum ada produk.\n";
+        cout << "Silakan tambahkan produk terlebih dahulu.\n";
+        cout << "============================\n";
         return;
     }
+    cout << "---------------------------\n";
     cout << "ID\tNama\tHarga\tStok\n";
+    cout << "---------------------------\n";
     for (const auto& p : daftarProduk) {
         cout << p.id << "\t" << p.nama << "\t" << p.harga << "\t" << p.stok << '\n';
+        cout << "---------------------------\n";
     }
+        cout << "============================\n";
 }
 // edit produk
 void editProduk() {
     string id;
-    cout << "\n== Edit Produk ==\n";
+    cout << "\n===== Edit Produk =====\n";
     cout << "Masukkan ID produk yang ingin diubah: "; cin >> id;
     bool ditemukan = false;
     for (auto& p : daftarProduk) {
@@ -247,18 +277,21 @@ void editProduk() {
             cout << "Masukkan stok baru: "; cin >> p.stok;
             simpanSemuaProduk();
             cout << "Produk berhasil diperbarui.\n";
+            cout << "============================\n";
             break;
         }
     }
 
     if (!ditemukan) {
         cout << "Produk dengan ID " << id << " tidak ditemukan.\n";
+        cout << "Silakan coba lagi.\n";
+        cout << "============================\n";
     }
 }
 // hapus produk
 void hapusProduk() {
     string id;
-    cout << "\n== Hapus Produk ==\n";
+    cout << "\n===== Hapus Produk =====\n";
     cout << "Masukkan ID produk yang ingin dihapus: "; cin >> id;
     bool ditemukan = false;
     for (auto it = daftarProduk.begin(); it != daftarProduk.end(); ++it) {
@@ -266,30 +299,38 @@ void hapusProduk() {
             daftarProduk.erase(it);
             simpanSemuaProduk();
             cout << "Produk berhasil dihapus.\n";
+            cout << "============================\n";
             ditemukan = true;
             break;
         }
     }
     if (!ditemukan) {
         cout << "Produk dengan ID " << id << " tidak ditemukan.\n";
+        cout << "Silakan coba lagi.\n";
+        cout << "============================\n";
     }
 }
 // cari produk
 void cariProduk() {
     string keyword;
-    cout << "\n== Cari Produk ==\n";
+    cout << "\n===== Cari Produk ======\n";
     cout << "Masukkan nama atau ID produk: "; cin >> keyword;
     bool ditemukan = false;
     cout << "Hasil pencarian:\n";
+    cout << "---------------------------\n";
     cout << "ID\tNama\tHarga\tStok\n";
+    cout << "---------------------------\n";
     for (const auto& p : daftarProduk) {
         if (p.id.find(keyword) != string::npos || p.nama.find(keyword) != string::npos) {
             cout << p.id << "\t" << p.nama << "\t" << p.harga << "\t" << p.stok << '\n';
             ditemukan = true;
+            cout << "============================\n";
         }
     }
     if (!ditemukan) {
         cout << "Produk tidak ditemukan.\n";
+        cout << "Silakan coba lagi.\n";
+        cout << "============================\n";
     }
 }
 // laporan penjualan
@@ -297,6 +338,8 @@ void laporanPenjualan() {
     ifstream file("laporan.txt");
     if (!file) {
         cout << "Belum ada data laporan.\n";
+        cout << "Silakan lakukan transaksi terlebih dahulu.\n";
+        cout << "============================\n";
         return;
     }
 
@@ -310,10 +353,12 @@ void laporanPenjualan() {
     }
     file.close();
 
-    cout << "\n== Laporan Penjualan ==\n";
+    cout << "\n===== Laporan Penjualan =====\n";
     cout << "ID\tJumlah Terjual\tTotal Pendapatan\n";
+    cout << "-----------------------\n";
     for (const auto& l : laporan) {
         cout << l.first << "\t" << l.second.first << "\t\t" << l.second.second << '\n';
+        cout << "============================\n";
     }
 }
 // Menu admin
@@ -321,7 +366,7 @@ void menuAdmin() {
     int pilihan;
     loadProduk(); // muat data produk setiap kali masuk menu
     do {
-        cout << "\n=== Menu Admin ===\n";
+        cout << "\n====== Menu Admin =====\n";
         cout << "1. Tambah Produk\n";
         cout << "2. Lihat Produk\n";
         cout << "3. Edit Produk\n";
@@ -329,11 +374,13 @@ void menuAdmin() {
         cout << "5. Cari Produk\n";
         cout << "6. Laporan Penjualan\n";
         cout << "7. Kembali\n";
-        cout << "Pilih: ";
-        cin >> pilihan;
+        cout << "Pilih: "; cin >> pilihan;
+        cout << "\n============================\n";
         if (cin.fail()) {
             cin.clear(); cin.ignore(1000, '\n');
             cout << "Input tidak valid.\n";
+            cout << "Silakan masukkan angka 1-7.\n";
+            cout << "============================\n";
             continue;
         }
         switch (pilihan) {
@@ -359,6 +406,8 @@ void menuAdmin() {
                 return;
             default:
                 cout << "Pilihan tidak valid.\n";
+                cout << "Silakan masukkan angka 1-7.\n";
+                cout << "============================\n";
                 break;
         }
     } while (true);
@@ -377,7 +426,7 @@ vector<ItemKeranjang> keranjang;
 void tambahKeKeranjang() {
     string id;
     int jumlah;
-    cout << "\n== Tambah ke Keranjang ==\n";
+    cout << "\n===== Tambah ke Keranjang =====\n";
     cout << "Masukkan ID produk: ";
     cin >> id;
     bool ditemukan = false;
@@ -386,39 +435,56 @@ void tambahKeKeranjang() {
             ditemukan = true;
             cout << "Masukkan jumlah: ";
             cin >> jumlah;
-
+            if (cin.fail()) {
+                cin.clear(); cin.ignore(1000, '\n');
+                cout << "Input tidak valid. Silakan masukkan angka.\n";
+                return;
+            }
             if (jumlah <= 0) {
                 cout << "Jumlah tidak valid!\n";
+                cout << "Silakan masukkan jumlah lebih dari 0.\n";       
+                cout << "============================\n";        
                 return;
             }
 
             if (jumlah > p.stok) {
                 cout << "Stok tidak mencukupi! Stok tersedia: " << p.stok << "\n";
+                cout << "Silakan masukkan jumlah yang sesuai.\n";
+                cout << "============================\n";
                 return;
             }
 
             // Tambahkan ke keranjang
             keranjang.push_back({p.id, p.nama, p.harga, jumlah});
             cout << "Produk berhasil ditambahkan ke keranjang.\n";
+            cout << "=============================\n";
             return;
         }
     }
 
     if (!ditemukan) {
         cout << "ID produk tidak ditemukan.\n";
+        cout << "Silakan coba lagi dengan ID yang valid.\n";
+        cout << "============================\n";
     }
 }
 // tampilkan keranjang
 void tampilkanKeranjang() {
     if (keranjang.empty()) {
+        cout << "\n===== Keranjang Anda =====\n";
         cout << "\nKeranjang kosong.\n";
+        cout << "Silakan tambahkan produk ke keranjang terlebih dahulu.\n";
+        cout << "============================\n";
         return;
     }
 
-    cout << "\n== Isi Keranjang Anda ==\n";
+    cout << "\n====== Isi Keranjang Anda ======\n";
+    cout << "---------------------------\n";
     cout << "ID\tNama\tHarga\tJumlah\n";
+    cout << "----------------------------\n";
     for (const auto& item : keranjang) {
         cout << item.idProduk << "\t" << item.namaProduk << "\t" << item.harga << "\t" << item.jumlah << "\n";
+    cout << "=============================\n";
     }
 }
 // hapus keranjang
@@ -426,12 +492,17 @@ void hapusKeranjang(const string& username) {
     string namaFile = "keranjang_" + username + ".txt";
     ofstream keranjangKosong(namaFile, ios::trunc); // kosongkan isi file
     keranjangKosong.close();
+    cout << "\n===== Hapus Keranjang =====\n";
     cout << "Keranjang berhasil dikosongkan.\n";
+    cout << "============================\n";
 }
 // checkout
 void checkoutKeranjang(const string& username) {
+    cout << "\n===== Checkout =====\n";
     if (keranjang.empty()) {
-        cout << "\nKeranjang kosong. Tidak bisa checkout.\n";
+        cout << "Keranjang kosong. Tidak bisa checkout.\n";
+        cout << "Silakan tambahkan produk ke keranjang terlebih dahulu.\n";
+        cout << "============================\n";
         return;
     }
 
@@ -443,6 +514,9 @@ void checkoutKeranjang(const string& username) {
         for (const auto& p : daftarProduk) {
             if (p.id == item.idProduk && item.jumlah > p.stok) {
                 cout << "Stok untuk " << item.namaProduk << " tidak mencukupi!\n";
+                cout << "Stok tersedia: " << p.stok << ", Jumlah yang diminta: " << item.jumlah << "\n";
+                cout << "Silakan kurangi jumlah atau pilih produk lain.\n";
+                cout << "============================\n";
                 stokCukup = false;
                 break;
             }
@@ -461,9 +535,13 @@ void checkoutKeranjang(const string& username) {
     cout << "2. COD (Cash on Delivery)\n";
     cout << "3. E-wallet\n";
     cout << "Pilihan (1-3): ";
-    int metode;
-    cin >> metode;
-
+    int metode; cin >> metode;
+    if (cin.fail() || metode < 1 || metode > 3) {
+        cin.clear(); cin.ignore(1000, '\n');
+        cout << "Pilihan tidak valid. Silakan coba lagi.\n";
+        cout << "============================\n";
+        return;
+    }
     string metodePembayaran;
     switch (metode) {
         case 1: metodePembayaran = "Transfer Bank"; break;
@@ -477,11 +555,12 @@ void checkoutKeranjang(const string& username) {
     ofstream lapor("laporan.txt", ios::app); // <-- Tambahan penting
     time_t now = time(0);
 
-    file << "=== Transaksi ===\n";
-    file << "Username: " << username << " ===\n";
+    file << "===== Transaksi =====\n";
+    file << "Username: " << username << "\n";
     file << "Alamat: " << alamat << "\n";
     file << "Metode Pembayaran: " << metodePembayaran << "\n";
     file << "Waktu: " << ctime(&now);
+
 
     for (auto& item : keranjang) {
         // Kurangi stok
@@ -507,19 +586,23 @@ void checkoutKeranjang(const string& username) {
     }
 
     file << "Total Pembayaran: Rp" << total << "\n";
-    file << "-----------------------------\n";
+    file << "============================\n";
     file.close();
     lapor.close(); // <-- Tutup file laporan
 
     simpanSemuaProduk(); // update stok
     keranjang.clear();   // kosongkan keranjang
 
-    cout << "\n=== Transaksi oleh " << username << " ===\n";
+    cout << "\n===== Transaksi oleh " << username << " =====\n";
     cout << "Alamat: " << alamat << "\n";
     cout << "Metode Pembayaran: " << metodePembayaran << "\n";
     cout << "Total yang harus dibayar: Rp" << total << "\n";
-    cout << "\nCheckout berhasil! Total yang harus dibayar: Rp" << total << "\n";
+    cout << "=============================\n";
+    cout << "\n=====Checkout berhasil!=====" << '\n';
+    cout << "Total yang harus dibayar: Rp" << total << "\n";
     cout << "Terima kasih telah berbelanja.\n";
+    cout << "========= ( ^_^ ) ==========\n";
+    cout << "============================\n";
 }
 // Riwayat transaksi
 void lihatRiwayatTransaksi(const string& username) {
@@ -527,7 +610,7 @@ void lihatRiwayatTransaksi(const string& username) {
     string baris;
     bool ditemukan = false;
 
-    cout << "\n=== Riwayat Transaksi Anda ===\n";
+    cout << "\n===== Riwayat Transaksi Anda =====\n";
 
     while (getline(inFile, baris)) {
         if (baris.find("Username: " + username) != string::npos) {
@@ -538,12 +621,13 @@ void lihatRiwayatTransaksi(const string& username) {
             while (getline(inFile, baris) && baris.find("-----------------------------") == string::npos) {
                 cout << baris << "\n";
             }
-            cout << "-----------------------------\n";
         }
     }
 
     if (!ditemukan) {
         cout << "Belum ada transaksi.\n";
+        cout << "Silakan lakukan transaksi terlebih dahulu.\n";
+        cout << "============================\n";
     }
 
     inFile.close();
@@ -553,7 +637,7 @@ void lihatRiwayatTransaksi(const string& username) {
 void menuCustomer(const string& username, const string& role) {
     int pilihan;
     do {
-        cout << "\n=== Menu Customer ===\n";
+        cout << "\n===== Menu Customer =====\n";
         cout << "1. Lihat Produk\n";
         cout << "2. Cari Produk\n";
         cout << "3. Tambah ke Keranjang\n";
@@ -562,9 +646,9 @@ void menuCustomer(const string& username, const string& role) {
         cout << "6. Checkout\n";
         cout << "7. Riwayat Transaksi\n";
         cout << "8. Kembali\n";
-        cout << "Pilih: ";
-        cin >> pilihan;
-
+        cout << "Pilih: "; cin >> pilihan;
+        cout << "============================\n";
+        
         if (cin.fail()) {
             cin.clear(); cin.ignore(1000, '\n');
             cout << "yang anda masukkan tidak valid.\n";
@@ -607,18 +691,20 @@ void menuCustomer(const string& username, const string& role) {
 void menuPengaturanAkun(const string& username, const string& role) {
     int pilihan;
     do {
-        cout << "\n=== Pengaturan Akun ===\n";
+        cout << "\n===== Pengaturan Akun =====\n";
         cout << "1. Lihat Profil\n";
         cout << "2. Ubah Profil\n";
         cout << "3. Ganti Password\n";
         cout << "4. Lihat Histori Login\n";
         cout << "5. Kembali\n";
         cout << "Pilih: "; cin >> pilihan;
+        cout << "============================\n";
          // jika input huruf tidak error/looping tak henti
         if (cin.fail()) {
         cin.clear(); // menghapus flag error
         cin.ignore(1000, '\n'); // buang karakter sisa di input buffer
         cout << "Input tidak valid. Masukkan angka 1-4.\n";
+        cout << "============================\n";
         continue; // balik ke atas loop
         }
          switch (pilihan) {
@@ -650,17 +736,18 @@ void menuPengaturanAkun(const string& username, const string& role) {
 void menuCustomerUtama(const string& username, const string& role) {
     char pilih;
     do {
-        cout << "\n=== Menu Customer ===\n";
+        cout << "\n===== Menu Customer =====\n";
         cout << "1. Belanja / Lihat Produk\n";  // Contoh fitur
         cout << "2. Pengaturan Akun\n";
         cout << "3. Kembali\n";
-        cout << "Pilih: ";
-        cin >> pilih;
+        cout << "Pilih: "; cin >> pilih;
+        cout << "============================\n";
         // jika input huruf tidak error/looping tak henti
         if (cin.fail()) {
         cin.clear(); // menghapus flag error
         cin.ignore(1000, '\n'); // buang karakter sisa di input buffer
         cout << "Input tidak valid. Masukkan angka 1-4.\n";
+        cout << "============================\n";
         continue; // balik ke atas loop
         }
         switch (pilih) {
@@ -681,16 +768,18 @@ void menuCustomerUtama(const string& username, const string& role) {
 void menuUtama(const string& username, const string& role) {
     int pilihan;
     do {
-        cout << "\n=== Menu Utama (" << role << ") ===\n";
+        cout << "\n===== Menu Utama (" << role << ") ======\n";
         cout << "1. Pengaturan Akun\n";
         cout << "2. Fitur " << (role == "admin" ? "Admin" : "Customer") << "\n";
         cout << "3. Logout\n";
-        cout << "Pilih: "; cin >> pilihan; 
+        cout << "Pilih: "; cin >> pilihan;
+        cout << "============================\n"; 
         // jika input huruf tidak error/looping tak henti
         if (cin.fail()) {
         cin.clear(); // menghapus flag error
         cin.ignore(1000, '\n'); // buang karakter sisa di input buffer
         cout << "Input tidak valid. Masukkan angka 1-4.\n";
+        cout << "============================\n";
         continue; // balik ke atas loop
         }
         switch (pilihan){
@@ -706,9 +795,11 @@ void menuUtama(const string& username, const string& role) {
             break;
         case 3:
             cout << "Logout berhasil.\n";
+            cout << "============================\n";
             return;
         default:
             cout << "Pilihan tidak valid.\n";
+            cout << "Silakan masukkan angka 1-3.\n";
             break;
         }
     } while (true);
@@ -719,49 +810,63 @@ int main(){
     loadAkun(); // Muat data dari file saat program mulai
     int pilih, percobaan = 3; // Maksimal 3 kali percobaan login
     do{
-    cout << "===Selamat datang di Sopi Sell===\n";
+    cout << "\n===== Sopi Sell =====\n";
+    cout << "Selamat datang di Sopi Sell!\n";
     cout << "1. login\n";
     cout << "2. Belum punya akun? Daftar di sini\n";
     cout << "3. Lupa password/reset password\n";
     cout << "4. keluar?\n";
     cout << "Silakan pilih menu(1-4): "; cin >> pilih;
+    cout << "============================\n";
     // jika input huruf tidak error/looping tak henti
     if (cin.fail()) {
     cin.clear(); // menghapus flag error
     cin.ignore(1000, '\n'); // buang karakter sisa di input buffer
+    cout << "\n======error!======\n";
     cout << "Input tidak valid. Masukkan angka 1-4.\n";
+    cout << "==================\n";
     continue; // balik ke atas loop
     }
     switch (pilih){
         case 1:
             if (percobaan <= 0) {
                 cout << "Kesempatan login habis. Silakan coba lagi nanti.\n";
+                cout << "============================\n";
                 continue;
             }
-            cout << "==Login==" << '\n';
+            cout << "\n===== Login ======" << '\n';
             cout << "Masukkan username/email anda: "; cin >> username;
             cout << "Masukkan password: "; cin >> password;
+            cout << "============================\n";
             if  (akun.find(username) != akun.end() && akun[username].first == password){
                 string role = akun[username].second;
-                cout << "Login berhasil.\n";
-                cout << "Selamat datang, " << username << "(" << role << ")!" << '\n';
+                cout << "=====Login berhasil!=====\n";
+                cout << "Selamat datang " << username << " (" << role << ")!" << '\n';
+                cout << "============================\n";
                 simpanHistoriLogin(username);
                 menuUtama(username, akun[username].second);
             } else {
                 percobaan--;
                 if (percobaan > 0) {
-                cout << "Login gagal. Coba lagi (" << percobaan << " percobaan tersisa)\n";
+                cout << "\n=====Login gagal!=====\n";
+                cout << "Coba lagi! (" << percobaan << " percobaan tersisa)\n";
+                cout << "============================\n";
                 } else {
-                cout << "Anda telah gagal login 3 kali. Kembali ke menu utama.\n";
+                cout << "\n=====Login gagal!=====\n";
+                cout << "Anda telah gagal login 3 kali.\n";
+                cout << "Silakan coba lagi nanti.\n";
+                cout << "============================\n";
                 percobaan = 3;
                 }
             }
         break; 
         case 2:
-            cout << "== Daftar Akun Baru ==\n";
+            cout << "\n===== Daftar Akun Baru =====\n";
             cout << "Masukkan username: "; cin >> username;
             if (akun.find(username) != akun.end()) {
                 cout << "Username sudah terdaftar!\n";
+                cout << "Silakan pilih username lain.\n";
+                cout << "============================\n";
             } else {
                 cout << "Masukkan password: "; cin >> password;
                 cout << "1. Admin\n2. Customer\nPilih role: ";
@@ -770,16 +875,24 @@ int main(){
                 simpanAkun(username, password, role);
                 akun[username] = make_pair(password, role);
                 cout << "Akun berhasil dibuat.\n";
+                cout << "Silakan login dengan akun baru Anda.\n";
+                cout << "============================\n";
             }
             break;
         case 3:
             lupaPassword();
             break;
         case 4:
-            cout << "Terima kasih telah menggunakan Sopi Sell\n"; 
+            cout << "\n========== Keluar! ==========\n";
+            cout << "Terima kasih telah menggunakan Sopi Sell!\n"; 
+            cout << "========== ( ^_^ ) ==========\n";
+            cout << "=============================\n";
+            cout << "\n";
             return 0;
         default:
-            cout << "tidak valid.\n";
+            cout << "\n=====tidak valid!======\n";
+            cout << "Silakan pilih menu yang tersedia (1-4).\n";
+            cout << "============================\n";
         }
     } while (true);
 
